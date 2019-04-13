@@ -23,8 +23,8 @@ class CreateUsersTable extends Migration
             $table->integer('role_id', false, true);
             $table->string('name', 255);
             $table->string('surname', 255);
-            $table->string('image', 255);
-            $table->string('description', 255);
+            $table->string('image', 255)->nullable();
+            $table->string('description', 255)->nullable();;
             $table->string('email')->unique();
             $table->string('password', 255);
             $table->rememberToken();    

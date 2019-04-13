@@ -24,7 +24,7 @@ class Createçategories extends Migration
             $table->integer('category_id', false, true);
             $table->string('title');
             $table->string('content');
-            $table->string('image');
+            $table->string('image')->nullable();;
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
@@ -38,7 +38,7 @@ class Createçategories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
         Schema::dropIfExists('posts');
+        Schema::dropIfExists('categories');
     }
 }
