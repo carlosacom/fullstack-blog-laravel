@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
             'role_id' => 1,
             'image'=> '',
             'email' => 'carlosaperez1997@gmail.com',
-            'password' => 'a',
+            'password' => \Hash::make('123456789'),
         ]);
         User::create([
             'id' => 2,
@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
             'role_id' => 2,
             'image'=> '',
             'email' => 'algo@algo.com',
-            'password' => 'a',
+            'password' => \Hash::make('123456789'),
         ]);
         Category::create([
             'id' => 1,

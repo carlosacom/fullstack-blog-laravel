@@ -1,8 +1,10 @@
 <?php
-Route::post('login','Usercontroller@login');
-Route::post('register','Usercontroller@store');
+Route::post('login','UserController@login');
+Route::post('register','UserController@store');
 Route::group(['middleware' => ['jwtAuth']], function() {
-    Route::resource('/user','UserController');
+    Route::post('/user/upload', 'UserController@upload');
+    Route::put('/user', 'UserController@update');
+    // Route::resource('/user','UserController');
 });
 Route::resource('/category', 'CategoryController');
 Route::resource('/roles', 'RoleController');
