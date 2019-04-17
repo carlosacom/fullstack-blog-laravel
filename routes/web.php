@@ -5,14 +5,15 @@ Route::get('images/{filename}', function ($filename) {
     return $image->getImage($filename);    
 });
 Route::get('user/{id}','UserController@show');
+Route::get('posts/category/{category_id}', 'PostController@getPostsForCategory');
+Route::get('posts/user/{user_id}', 'PostController@getPostsForUser');
 Route::post('login','UserController@login');
 Route::post('register','UserController@store');
+Route::post('posts/image/{id}','PostController@uploadImage');
 Route::group(['middleware' => ['jwtAuth']], function() {
     Route::post('/user/upload', 'UserController@upload');
     Route::put('/user', 'UserController@update');
-    // Route::resource('/user','UserController');
 });
 Route::resource('/category', 'CategoryController');
-// Route::resource('/roles', 'RoleController');
-// Route::resource('/posts', 'PostController');:resource('/category', 'CategoryController');
+Route::resource('/posts', 'PostController');
 // Route::resource('/roles', 'RoleController');
