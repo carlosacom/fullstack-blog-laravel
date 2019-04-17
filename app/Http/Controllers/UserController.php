@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -101,7 +102,25 @@ class UserController extends Controller
         }
         return response()->json($data['response'],$data['status']);
     }
-
+    public function show(Int $id)
+    {
+        $user = DB::table('users')->where('users.id',$id)
+            ->join('roles', 'roles.id', '=', 'users.role_id')
+            ->select('users.id', 'users.name','users.surname', 'users.image', 'users.description', 'users.password', 'users.created_at', 'roles.name as role')
+            ->first();
+        if ($user) {
+            $response = array(
+                'status' => 200,
+                'response' => array('user' => $user)
+            );
+        } else {
+            $response = array(
+                'status' => 404,
+                'response' => array('errors' => 'El usuario no existe')
+            );
+        }
+        return response()->json($response['response'],$response['status']);
+    }
     public function validateRequest(Array $array, Int $id = null, $password = null, $name = null, $surname = null ) {
         $rules = array(
             'name'      => ($name) ?'required|string|min:3|max:255' : 'nulleable',
