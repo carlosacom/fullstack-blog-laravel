@@ -64,54 +64,65 @@ class UserController extends Controller
         $dataRequest = array_map('trim',$request->all());
         $validate = $this->validateRequest($dataRequest, $dataUser->sub, null, true, true);
         if(!$validate->fails()) {
-            unset($dataRequest['id']);
-            unset($dataRequest['role']);
-            unset($dataRequest['password']);
-            unset($dataRequest['created_at']);
-            unset($dataRequest['remenber_token']);
-            $user = User::find($dataUser->sub)->update($dataRequest);
-            $response = array(
-                'status' => 200,
-                'response' => array(
-                    'user' => $dataUser,
-                    'changes' => $dataRequest
-                )
-            );
+            $user = User::find($dataUser->sub);
+            if ($user) {
+                $user->name = $dataRequest['name'];
+                $user->surname = $dataRequest['surname'];
+                $user->email = $dataRequest['email'];
+                $user->description = $dataRequest['description'];
+                $user->update();
+                $response = array(
+                    'status' => 200,
+                    'response' => $user
+                );
+            } else {
+                $response = array(
+                    'status' => 404,
+                    'response' => array('errors' => 'no existe el usuario')
+                );
+            }
         } else {
             $response = array(
                 'status' => 400,
                 'response' => array('errors' => $validate->errors())
             );
         }
-
         return response()->json($response['response'],$response['status']);
     }
     public function upload(Request $request) {
-        $upload = new \UploadImage();
-        $responseImage = $upload->upload($request);
-        if ($responseImage['success']) {
-            $data = array(
-                'status' => 200,
-                'response' => array('response' => 'algo')
-            );
-        } else {
-            $data = array(
-                'status' => 400,
-                'response' => array('errors' => 'Imagen no se subió al servidor')
-            );
+        try {
+            $dataUser = $request->header('DataUser');
+            $upload = new \UploadImage();
+            $responseImage = $upload->upload($request);
+            if ($responseImage['success']) {
+                $user = User::find($dataUser->sub);
+                $user->image = $responseImage['image'];
+                $user->update();
+                $data = array(
+                    'status' => 200,
+                    'response' => array('image' => $responseImage['image'])
+                );
+            } else {
+                $data = array(
+                    'status' => 400,
+                    'response' => array('errors' => 'Imagen no se subió al servidor')
+                );
+            }
+        } catch (\Exception $ex) {
+                $data = array(
+                    'status' => 500,
+                    'response' => array('errors' => 'Hubo un error en el servidor'. $ex->getMessage())
+                );
         }
         return response()->json($data['response'],$data['status']);
     }
     public function show(Int $id)
     {
-        $user = DB::table('users')->where('users.id',$id)
-            ->join('roles', 'roles.id', '=', 'users.role_id')
-            ->select('users.id', 'users.name','users.surname', 'users.image', 'users.description', 'users.password', 'users.created_at', 'roles.name as role')
-            ->first();
+        $user = User::find($id)->load('role');
         if ($user) {
             $response = array(
                 'status' => 200,
-                'response' => array('user' => $user)
+                'response' => $user
             );
         } else {
             $response = array(

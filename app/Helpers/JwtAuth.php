@@ -35,13 +35,13 @@ class JwtAuth {
                   } else {
                         $response = array(
                               'status' => 404,
-                              'response' => array('error' => 'Usuario o contraseña incorrecto'),
+                              'response' => array('errors' => 'Usuario o contraseña incorrecto'),
                         );
                   }
             } else {
                   $response = array(
                         'status' => 404,
-                        'response' => array('error' => 'Usuario o contraseña incorrecto'),
+                        'response' => array('errors' => 'Usuario o contraseña incorrecto'),
                   );
             }
             return $response;
