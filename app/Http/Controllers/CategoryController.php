@@ -15,9 +15,7 @@ class CategoryController extends Controller
     }
     public function index()
     {
-        return response()->json(
-            array('categories' => Category::all())
-        );
+        return response()->json(Category::all());
     }
     public function show(Int $id)
     {
@@ -48,7 +46,7 @@ class CategoryController extends Controller
                     $category->save();
                     $response = array(
                         'status' => 200,
-                        'response' => array('category' => $category)
+                        'response' => $category
                     );
                 } else {
                     $response = array(
