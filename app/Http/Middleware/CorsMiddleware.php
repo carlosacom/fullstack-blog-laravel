@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class CorsMiddleware
-{
+class CorsMiddleware {
+
     /**
      * Handle an incoming request.
      *
@@ -13,8 +13,7 @@ class CorsMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next) {
         $response = $next($request);
         $IlluminateResponse = 'Illuminate\Http\Response';
         $SymfonyResponse = 'Symfony\Component\HttpFoundation\Response';
@@ -24,14 +23,14 @@ class CorsMiddleware
             'Access-Control-Allow-Headers' => 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Authorization , Access-Control-Request-Headers',
         ];
 
-        if($response instanceof $IlluminateResponse) {
+        if ($response instanceof $IlluminateResponse) {
             foreach ($headers as $key => $value) {
                 $response->header($key, $value);
             }
             return $response;
         }
 
-        if($response instanceof $SymfonyResponse) {
+        if ($response instanceof $SymfonyResponse) {
             foreach ($headers as $key => $value) {
                 $response->headers->set($key, $value);
             }
@@ -40,4 +39,5 @@ class CorsMiddleware
 
         return $response;
     }
+
 }

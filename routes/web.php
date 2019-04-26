@@ -8,7 +8,8 @@ Route::get('posts/category/{category_id}', 'PostController@getPostsForCategory')
 Route::get('posts/user/{user_id}', 'PostController@getPostsForUser');
 Route::post('login','UserController@login');
 Route::post('register','UserController@store');
-Route::post('posts/image/{id}','PostController@uploadImage');
+Route::post('posts/upload', 'PostController@uploadImage');
+// Route::post('posts/image/{id}','PostController@uploadImage');
 Route::group(['middleware' => ['jwtAuth']], function() {
     Route::get('user/{id}','UserController@show');
     Route::post('/user/upload', 'UserController@upload');
